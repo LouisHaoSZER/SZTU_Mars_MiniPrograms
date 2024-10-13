@@ -17,28 +17,10 @@
           <span class="font-semibold text-white">深圳·坪山 | 粤</span>
         </div>
       </header>
-      <wd-card title="[重要信息:高温酷暑]">
-        一般的，检举内容由承办的党的委员会或纪律检查委员会将处理意见或复议、复查结论同申诉人见面，听取其意见。复议、复查的结论和决定，应交给申诉人一份。
+      <wd-card v-for="(item, index) in pastContents" :key="index" :title="item.title">
+        {{ item.content }}
         <template #footer>
-          <text class="date">气象研究工作室2024-06-21发布</text>
-        </template>
-      </wd-card>
-      <wd-card title="[重要信息:高温酷暑]">
-        一般的，检举内容由承办的党的委员会或纪律检查委员会将处理意见或复议、复查结论同申诉人见面，听取其意见。复议、复查的结论和决定，应交给申诉人一份。
-        <template #footer>
-          <text class="date">气象研究工作室2024-06-21发布</text>
-        </template>
-      </wd-card>
-      <wd-card title="[重要信息:高温酷暑]">
-        一般的，检举内容由承办的党的委员会或纪律检查委员会将处理意见或复议、复查结论同申诉人见面，听取其意见。复议、复查的结论和决定，应交给申诉人一份。
-        <template #footer>
-          <text class="date">气象研究工作室2024-06-21发布</text>
-        </template>
-      </wd-card>
-      <wd-card title="[重要信息:高温酷暑]">
-        一般的，检举内容由承办的党的委员会或纪律检查委员会将处理意见或复议、复查结论同申诉人见面，听取其意见。复议、复查的结论和决定，应交给申诉人一份。
-        <template #footer>
-          <text class="date">气象研究工作室2024-06-21发布</text>
+          <text class="date">{{ item.date }}</text>
         </template>
       </wd-card>
     </div>
@@ -47,6 +29,54 @@
 
 <script lang="ts" setup>
 //
+interface ContentItem {
+  id: number
+  title: string
+  content: string
+  date: string
+}
+
+const pastContents = ref<ContentItem[]>([])
+const loadMoreStatus = ref<'more' | 'loading' | 'noMore'>('more')
+
+const fetchMoreContents = async () => {
+  // 这里应该调用您的API来获取往期内容
+  // 以下是模拟数据
+  const newContents: ContentItem[] = [
+    {
+      id: 1,
+      title: '[重要信息:高温酷暑]',
+      content:
+        '一般的，检举内容由承办的党的委员会或纪律检查委员会将处理意见或复议、复查结论同申诉人见面，听取其意见。复议、复查的结论和决定，应交给申诉人一份。',
+      date: '气象研究工作室2024-06-21发布',
+    },
+    {
+      id: 2,
+      title: '[重要信息:高温酷暑]',
+      content:
+        '一般的，检举内容由承办的党的委员会或纪律检查委员会将处理意见或复议、复查结论同申诉人见面，听取其意见。复议、复查的结论和决定，应交给申诉人一份。',
+      date: '气象研究工作室2024-06-21发布',
+    },
+    // ... 更多内容
+  ]
+
+  pastContents.value.push(...newContents)
+
+  if (pastContents.value.length >= 20) {
+    // 假设总共有20篇文章
+    loadMoreStatus.value = 'noMore'
+  }
+}
+onMounted(() => {
+  fetchMoreContents()
+})
+
+onReachBottom(() => {
+  if (loadMoreStatus.value !== 'noMore') {
+    loadMoreStatus.value = 'loading'
+    fetchMoreContents()
+  }
+})
 </script>
 
 <style lang="scss" scoped>

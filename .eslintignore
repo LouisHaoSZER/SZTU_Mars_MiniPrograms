@@ -1,2 +1,7 @@
 src/uni_modules/
 
+src/components/qiun-loading/*.vue
+src/components/qiun-title/*.vue
+src/components/qiun-data-charts/*.vue
+src/components/qiun-data-charts/*.js
+src/components/qiun-error/*.vue
