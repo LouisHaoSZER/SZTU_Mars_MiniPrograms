@@ -1,5 +1,5 @@
 {
-  "name": "unibest",
+  "name": "装满阳关的天气瓶",
   "appid": "H57F2ACE4",
   "description": "",
   "versionName": "1.0.0",
@@ -83,7 +83,7 @@
   },
   "quickapp": {},
   "mp-weixin": {
-    "appid": "wxa2abb91f64032a2b",
+    "appid": "wxafa8eaf448226b64",
     "setting": {
       "urlCheck": false
     },

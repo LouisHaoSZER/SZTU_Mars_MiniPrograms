@@ -37,7 +37,7 @@
         "iconType": "unocss"
       },
       {
-        "pagePath": "pages/my/index",
+        "pagePath": "pages/announcement/index",
         "text": "公告",
         "icon": "i-carbon-show-data-cards",
         "iconType": "unocss"
@@ -68,6 +68,24 @@
       }
     },
     {
+      "path": "pages/announcement/index",
+      "type": "page",
+      "layout": "tabbar",
+      "style": {
+        "navigationBarTitleText": "公告",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/announcement/past",
+      "type": "page",
+      "layout": "default",
+      "style": {
+        "navigationBarTitleText": "往期公告",
+        "onReachBottomDistance": 50
+      }
+    },
+    {
       "path": "pages/metesciab/index",
       "type": "page",
       "layout": "tabbar",
@@ -81,14 +99,6 @@
       "layout": "default",
       "style": {
         "navigationBarTitleText": "往期科普内容"
-      }
-    },
-    {
-      "path": "pages/my/index",
-      "type": "page",
-      "layout": "tabbar",
-      "style": {
-        "navigationBarTitleText": "我的"
       }
     }
   ],

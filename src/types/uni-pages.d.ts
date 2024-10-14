@@ -6,14 +6,15 @@
 interface NavigateToOptions {
   url: "/pages/index/index" |
        "/pages/about/about" |
+       "/pages/announcement/index" |
+       "/pages/announcement/past" |
        "/pages/metesciab/index" |
-       "/pages/metesciab/past" |
-       "/pages/my/index";
+       "/pages/metesciab/past";
 }
 interface RedirectToOptions extends NavigateToOptions {}
 
 interface SwitchTabOptions {
-  url: "/pages/index/index" | "/pages/about/about" | "/pages/my/index" | "/pages/metesciab/index"
+  url: "/pages/index/index" | "/pages/about/about" | "/pages/announcement/index" | "/pages/metesciab/index"
 }
 
 type ReLaunchOptions = NavigateToOptions | SwitchTabOptions;

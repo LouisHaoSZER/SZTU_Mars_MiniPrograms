@@ -65,20 +65,19 @@ const goToPast = () => {
 <style lang="scss" scoped>
 //背景css类
 .bg-gradient {
-  background: linear-gradient(to bottom, #3b3cc0 30%, #efefef 30%);
+  background: #efefef; // 将整体背景色改为浅色
 }
 
 .curved-bg {
   position: absolute;
-  top: 30%;
+  top: 0;
   right: 0;
   left: 0;
-  height: 100px;
+  height: 40vh;
   /* background-color: #3b3cc0; */
   background: linear-gradient(to bottom, #3b3cc0, #4a6ebd);
   border-bottom-right-radius: 100% 60%;
   border-bottom-left-radius: 100% 60%;
-  transform: translateY(-50%);
 }
 
 // 日期css类

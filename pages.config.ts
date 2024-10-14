@@ -42,7 +42,7 @@ export default defineUniPages({
         iconType: 'unocss',
       },
       {
-        pagePath: 'pages/my/index',
+        pagePath: 'pages/announcement/index',
         text: '公告',
         icon: 'i-carbon-show-data-cards',
         iconType: 'unocss',

@@ -132,15 +132,16 @@ export const getEvnBaseUrl = () => {
       miniProgram: { envVersion },
     } = uni.getAccountInfoSync()
 
+    // TODO: 更改了环境，放一个pin 测试一下
     switch (envVersion) {
       case 'develop':
-        baseUrl = 'https://ukw0y1.laf.run'
+        baseUrl = 'https://devapi.qweather.com/v7'
         break
       case 'trial':
-        baseUrl = 'https://ukw0y1.laf.run'
+        baseUrl = 'https://devapi.qweather.com/v7'
         break
       case 'release':
-        baseUrl = 'https://ukw0y1.laf.run'
+        baseUrl = 'https://devapi.qweather.com/v7'
         break
     }
   }

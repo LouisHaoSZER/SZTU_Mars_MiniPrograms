@@ -23,7 +23,7 @@
         </div>
       </header>
 
-      <div class="bg-white bg-opacity-20 backdrop-blur-md rounded-2xl p-6 mb-6 shadow-lg">
+      <div class="bg-white bg-opacity-50 backdrop-blur-md rounded-2xl p-6 mb-6 shadow-lg">
         <div class="flex justify-between items-center mb-4">
           <span class="text-7xl font-bold text-white">29°</span>
           <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
@@ -115,19 +115,18 @@ const forecasts = ref([
   color: #d14328;
 }
 .bg-gradient {
-  background: linear-gradient(to bottom, #3b3cc0 30%, #efefef 30%);
+  background: #efefef;
 }
 
 .curved-bg {
   position: absolute;
-  top: 30%;
+  top: 0;
   right: 0;
   left: 0;
-  height: 100px;
+  height: 40vh;
   /* background-color: #3b3cc0; */
   background: linear-gradient(to bottom, #3b3cc0, #4a6ebd);
   border-bottom-right-radius: 100% 60%;
   border-bottom-left-radius: 100% 60%;
-  transform: translateY(-50%);
 }
 </style>
