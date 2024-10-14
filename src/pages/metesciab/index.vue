@@ -30,16 +30,18 @@
         </div>
       </div>
       <!-- 跳转长按钮 -->
-      <div class="px-4 mt-4">
+      <div class="px-4 mt-6">
         <button
           @click="goToPast"
           class="w-full bg-blue-700 text-white py-2 px-4 rounded-full flex justify-between items-center transition duration-300 ease-in-out hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         >
           <span class="font-semibold">往期科普</span>
-          <!-- TODO: Bug：图标不显示 -->
-          <view class="carbon:caret-right text-red"></view>
-          <div class="carbon:caret-right text-red"></div>
-          <div class="carbon:caret-right text-red"></div>
+          <!-- TODO: 等待图标资源 -->
+          <div>
+            <div class="i-carbon-caret-right text-red text-3xl"></div>
+            <div class="i-carbon-caret-right text-red text-2xl"></div>
+            <div class="i-carbon-caret-right text-red text-1xl"></div>
+          </div>
         </button>
       </div>
     </div>

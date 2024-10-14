@@ -27,16 +27,18 @@
         </wd-card>
       </div>
       <!-- 跳转长按钮 -->
-      <div v-if="showMoreButton" class="px-4 mt-4">
+      <div v-if="showMoreButton" class="px-4">
         <button
           @click="navigateToAllAnnouncements"
           class="w-full bg-blue-700 text-white py-2 px-4 rounded-full flex justify-between items-center transition duration-300 ease-in-out hover:bg-blue-800 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         >
           <span class="font-semibold">更多公告</span>
-          <!-- TODO: Bug：图标不显示 -->
-          <view class="carbon:caret-right text-red"></view>
-          <div class="carbon:caret-right text-red"></div>
-          <div class="carbon:caret-right text-red"></div>
+          <!-- TODO: 等待图标资源 -->
+          <div>
+            <div class="i-carbon-caret-right text-red text-3xl"></div>
+            <div class="i-carbon-caret-right text-red text-2xl"></div>
+            <div class="i-carbon-caret-right text-red text-1xl"></div>
+          </div>
         </button>
       </div>
     </div>
@@ -53,9 +55,25 @@ interface ContentItem {
   date: string
 }
 
-const pastContents = ref<ContentItem[]>([])
+const pastContents = ref<ContentItem[]>([
+  {
+    id: 1,
+    title: '公告 1',
+    content:
+      '这是第 1 条公告的内容。这是第 1 条公告的内容。这是第 1 条公告的内容。这是第 1 条公告的内容。这是第 1 条公告的内容。这是第 1 条公告的内容。这是第 1 条公告的内容。',
+    date: '2024-06-21 发布',
+  },
+  {
+    id: 2,
+    title: '公告 2',
+    content:
+      '这是第 2 条公告的内容。这是第 2 条公告的内容。这是第 2 条公告的内容。这是第 2 条公告的内容。这是第 2 条公告的内容。这是第 2 条公告的内容。这是第 2 条公告的内容。',
+    date: '2024-06-22 发布',
+  },
+])
+
 const showMoreButton = ref(false)
-const page = ref(1)
+const page = ref(3) // 更新初始页码
 
 const fetchMoreContents = async () => {
   // 这里应该调用您的API来获取往期内容
@@ -114,11 +132,23 @@ onReachBottom(() => {
 .content-container {
   position: relative;
   z-index: 10;
-  min-height: 100vh;
+  padding-bottom: 20px;
 }
 
-.card-container {
-  padding-bottom: 20px; // 为底部添加一些间距
+// 添加按钮样式
+button {
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow:
+      0 4px 6px rgba(50, 50, 93, 0.11),
+      0 1px 3px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
 }
 
 // 日期css类

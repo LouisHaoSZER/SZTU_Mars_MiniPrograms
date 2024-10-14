@@ -68,6 +68,14 @@
       }
     },
     {
+      "path": "pages/announcement/detail",
+      "type": "page",
+      "layout": "default",
+      "style": {
+        "navigationBarTitleText": "公告详情"
+      }
+    },
+    {
       "path": "pages/announcement/index",
       "type": "page",
       "layout": "tabbar",
@@ -83,6 +91,14 @@
       "style": {
         "navigationBarTitleText": "往期公告",
         "onReachBottomDistance": 50
+      }
+    },
+    {
+      "path": "pages/metesciab/detail",
+      "type": "page",
+      "layout": "default",
+      "style": {
+        "navigationBarTitleText": "科普详情"
       }
     },
     {

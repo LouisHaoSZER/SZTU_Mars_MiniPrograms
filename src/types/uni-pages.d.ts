@@ -6,8 +6,10 @@
 interface NavigateToOptions {
   url: "/pages/index/index" |
        "/pages/about/about" |
+       "/pages/announcement/detail" |
        "/pages/announcement/index" |
        "/pages/announcement/past" |
+       "/pages/metesciab/detail" |
        "/pages/metesciab/index" |
        "/pages/metesciab/past";
 }

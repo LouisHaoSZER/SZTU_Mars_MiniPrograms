@@ -75,7 +75,7 @@ const fetchPastContents = async () => {
 
 const goToDetail = (id: number) => {
   uni.navigateTo({
-    url: `/pages/metesciab/detail?id=${id}`,
+    url: `/pages/metesciab/detail`,
   })
 }
 

@@ -33,7 +33,9 @@
             <template #footer>
               <div class="flex justify-between items-center p-2 bg-gray-100">
                 <text class="date text-sm text-gray-600">{{ item.date }}</text>
-                <wd-button type="link" class="text-blue-500">详情</wd-button>
+                <wd-button type="link" class="text-blue-500" @click="viewDetails(item.id)">
+                  详情
+                </wd-button>
               </div>
             </template>
           </wd-card>
@@ -41,7 +43,8 @@
       </div>
       <div v-if="loadMoreStatus !== 'noMore'" class="mt-6 text-center">
         <wd-button
-          type="primary"
+          type="secondary"
+          class="custom-button-style"
           @click="loadMoreAnnouncements"
           :loading="loadMoreStatus === 'loading'"
         >
@@ -54,6 +57,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 interface ContentItem {
   id: number
@@ -66,6 +70,7 @@ const announcements = ref<ContentItem[]>([])
 const searchQuery = ref('')
 const loadMoreStatus = ref<'more' | 'loading' | 'noMore'>('more')
 const page = ref(1)
+const router = useRouter()
 
 const filteredAnnouncements = computed(() => {
   if (!searchQuery.value) return announcements.value
@@ -106,6 +111,12 @@ const loadMoreAnnouncements = async () => {
 
 const searchAnnouncements = () => {
   // 如果需要，这里可以添加额外的搜索逻辑
+}
+
+const viewDetails = (id: number) => {
+  uni.navigateTo({
+    url: `/pages/announcement/detail`,
+  })
 }
 
 onMounted(() => {
