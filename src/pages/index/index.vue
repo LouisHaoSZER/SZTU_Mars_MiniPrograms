@@ -32,15 +32,15 @@
 
       <div class="bg-white bg-opacity-50 backdrop-blur-md rounded-2xl p-6 mb-6 shadow-lg">
         <div class="flex justify-between items-center mb-4">
-          <span class="text-7xl font-bold text-white">29°</span>
+          <span class="text-7xl font-bold text-white">{{ todayWeather.temp }}°</span>
           <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
             <div class="w-10 h-10 bg-white rounded-full"></div>
           </div>
         </div>
-        <div class="text-xl mb-2 text-white">阵雨</div>
+        <div class="text-xl mb-2 text-white">{{ todayWeather.text }}</div>
         <div class="flex justify-between text-sm text-white">
-          <span>32° / 27°</span>
-          <span>体感温度 32°</span>
+          <span>{{ todayWeather.temp }} / {{ todayWeather.dew }}</span>
+          <span>体感温度 {{ todayWeather.feelsLike }}</span>
         </div>
       </div>
 
@@ -84,7 +84,7 @@
 
 <script lang="ts" setup>
 import { httpGet } from '@/utils/http'
-import PLATFORM from '@/utils/platform'
+import useWeatherRequest from '@/hooks/useWeatherRequest'
 
 import { ref } from 'vue'
 
@@ -95,21 +95,30 @@ defineOptions({
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 const author = ref('菲鸽')
-const description = ref(
-  'unibest 是一个集成了多种工具和技术的 uniapp 开发模板，由 uniapp + Vue3 + Ts + Vite4 + UnoCss + UniUI + VSCode 构建，模板具有代码提示、自动格式化、统一配置、代码片段等功能，并内置了许多常用的基本组件和基本功能，让你编写 uniapp 拥有 best 体验。',
-)
+
 // 测试 uni API 自动引入
 onLoad(() => {
   console.log(author)
 })
 
+// 接口数据映射表
+const api2dataMap = new Map([
+  ['风', 'windDir'],
+  ['云量', 'cloud'],
+  ['气压', 'pressure'],
+  ['降水量', 'precip'],
+  ['湿度', 'humidity'],
+  ['能见度', 'vis'],
+])
+
+// 天气详情
 const weatherDetails = ref([
-  { color: 'bg-blue-400', label: '风', icon: 'wind-gusts', value: '南风4级' },
-  { color: 'bg-gray-400', label: '云量', icon: 'cloud', value: '98%' },
-  { color: 'bg-red-400', label: '气压', icon: 'cloud-data-ops', value: '994hPa' },
-  { color: 'bg-blue-300', label: '降水量', icon: 'rain', value: '0.8mm/h' },
-  { color: 'bg-green-400', label: '湿度', icon: 'humidity', value: '85%' },
-  { color: 'bg-yellow-400', label: '能见度', icon: 'annotation-visibility', value: '500m' },
+  { color: 'bg-blue-400', label: '风', icon: 'wind-gusts', value: '暂无数据～' }, // windDirection + windScale
+  { color: 'bg-gray-400', label: '云量', icon: 'cloud', value: '暂无数据～' }, // clound
+  { color: 'bg-red-400', label: '气压', icon: 'cloud-data-ops', value: '暂无数据～' }, // pressure
+  { color: 'bg-blue-300', label: '降水量', icon: 'rain', value: '暂无数据～' }, // precip
+  { color: 'bg-green-400', label: '湿度', icon: 'humidity', value: '暂无数据～' }, // humidity
+  { color: 'bg-yellow-400', label: '能见度', icon: 'annotation-visibility', value: '暂无数据～' }, // vis
 ])
 
 const forecasts = ref([
@@ -121,6 +130,14 @@ const forecasts = ref([
   { day: '周五', color: 'bg-yellow-400', temp: 33, wind: '4-5级' },
 ])
 
+// 今日天气
+const todayWeather = ref({
+  temp: '暂无数据～',
+  text: '暂无数据～',
+  feelsLike: '暂无数据～',
+  dew: '暂无数据～',
+})
+
 // 请求数据部分
 // 获取气象数据
 const {
@@ -128,8 +145,9 @@ const {
   error: weatherError,
   data: weatherData,
   run: getWeatherData,
-} = useRequest(() =>
-  httpGet('/weather/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
+} = useWeatherRequest(
+  () => httpGet('/weather/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
+  { immediate: true },
 )
 
 // 天气预警
@@ -138,7 +156,7 @@ const {
   error: weatherWarningError,
   data: weatherWarningData,
   run: getWeatherWarningData,
-} = useRequest(() =>
+} = useWeatherRequest(() =>
   httpGet('/warning/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
 )
 
@@ -148,13 +166,23 @@ const {
   error: futureWeatherError,
   data: futureWeatherData,
   run: getFutureWeatherData,
-} = useRequest(() =>
+} = useWeatherRequest(() =>
   httpGet('/weather/7d', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
 )
 
-onLoad(async () => {
-  await getWeatherData()
-  console.log(weatherData.value)
+// 监听天气数据变化，更新天气详情
+watch(weatherData, () => {
+  const jsonWeatherData = JSON.parse(JSON.stringify(weatherData.value)) as WeatherData
+  weatherDetails.value.forEach((item) => {
+    const key = api2dataMap.get(item.label)
+    item.value = jsonWeatherData.now[key]
+  })
+  weatherDetails.value[0].value += jsonWeatherData.now.windScale + '级'
+
+  todayWeather.value.temp = jsonWeatherData.now.temp
+  todayWeather.value.text = jsonWeatherData.now.text
+  todayWeather.value.feelsLike = jsonWeatherData.now.feelsLike
+  todayWeather.value.dew = jsonWeatherData.now.dew
 })
 </script>
 

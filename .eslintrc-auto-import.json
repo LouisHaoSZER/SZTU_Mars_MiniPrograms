@@ -89,6 +89,8 @@
     "watch": true,
     "watchEffect": true,
     "watchPostEffect": true,
-    "watchSyncEffect": true
+    "watchSyncEffect": true,
+    "useAuth3Request": true,
+    "useWeatherRequest": true
   }
 }

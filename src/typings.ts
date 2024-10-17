@@ -6,6 +6,14 @@ type IResData<T> = {
   data: T
 }
 
+type WeatherData = {
+  code: number
+  fxLink: string
+  now: Record<string, any>
+  refer: Record<string, Array<string> | string>
+  updateTime: string
+}
+
 // uni.uploadFile文件上传参数
 type IUniUploadFileOptions = {
   file?: File
