@@ -5,18 +5,18 @@
 
 interface NavigateToOptions {
   url: "/pages/index/index" |
-       "/pages/about/about" |
        "/pages/announcement/detail" |
        "/pages/announcement/index" |
        "/pages/announcement/past" |
        "/pages/metesciab/detail" |
        "/pages/metesciab/index" |
-       "/pages/metesciab/past";
+       "/pages/metesciab/past" |
+       "/pages/visible/index";
 }
 interface RedirectToOptions extends NavigateToOptions {}
 
 interface SwitchTabOptions {
-  url: "/pages/index/index" | "/pages/about/about" | "/pages/announcement/index" | "/pages/metesciab/index"
+  url: "/pages/index/index" | "/pages/visible/index" | "/pages/announcement/index" | "/pages/metesciab/index"
 }
 
 type ReLaunchOptions = NavigateToOptions | SwitchTabOptions;

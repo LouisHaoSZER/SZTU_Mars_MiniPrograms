@@ -31,7 +31,7 @@
         "iconType": "unocss"
       },
       {
-        "pagePath": "pages/about/about",
+        "pagePath": "pages/visible/index",
         "text": "数据可视",
         "icon": "i-carbon-cloud-data-ops",
         "iconType": "unocss"
@@ -56,15 +56,8 @@
       "type": "home",
       "layout": "tabbar",
       "style": {
-        "navigationBarTitleText": "首页"
-      }
-    },
-    {
-      "path": "pages/about/about",
-      "type": "page",
-      "layout": "tabbar",
-      "style": {
-        "navigationBarTitleText": "关于"
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": true
       }
     },
     {
@@ -115,6 +108,15 @@
       "layout": "default",
       "style": {
         "navigationBarTitleText": "往期科普内容"
+      }
+    },
+    {
+      "path": "pages/visible/index",
+      "type": "page",
+      "layout": "tabbar",
+      "style": {
+        "navigationBarTitleText": "天气数据可视化",
+        "enablePullDownRefresh": true
       }
     }
   ],

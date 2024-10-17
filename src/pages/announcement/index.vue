@@ -35,9 +35,9 @@
           <span class="font-semibold">更多公告</span>
           <!-- TODO: 等待图标资源 -->
           <div>
-            <div class="i-carbon-caret-right text-red text-3xl"></div>
-            <div class="i-carbon-caret-right text-red text-2xl"></div>
-            <div class="i-carbon-caret-right text-red text-1xl"></div>
+            <div class="i-carbon-caret-right text-white text-3xl"></div>
+            <div class="i-carbon-caret-right text-white text-2xl"></div>
+            <div class="i-carbon-caret-right text-white text-1xl"></div>
           </div>
         </button>
       </div>

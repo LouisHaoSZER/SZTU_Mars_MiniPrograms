@@ -2,7 +2,8 @@
 {
   layout: 'tabbar',
   style: {
-    navigationBarTitleText: '关于',
+    navigationBarTitleText: '天气数据可视化',
+    enablePullDownRefresh: true,
   },
 }
 </route>
@@ -36,9 +37,9 @@
       <qiun-title-bar title="未来某段时间内的风向图" />
       <qiun-data-charts type="radar" :opts="opts" :chartData="chartData" />
     </view>
-    <wd-button @click="getWeatherData">获取气象数据</wd-button>
+    <!-- <wd-button @click="getWeatherData">获取气象数据</wd-button>
     <wd-button @click="getWeatherWarningData">获取预警状态</wd-button>
-    <wd-button @click="getFutureWeatherData">获取未来天气预报</wd-button>
+    <wd-button @click="getFutureWeatherData">获取未来天气预报</wd-button> -->
   </view>
 </template>
 

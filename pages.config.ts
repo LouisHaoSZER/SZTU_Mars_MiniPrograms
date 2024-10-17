@@ -36,7 +36,7 @@ export default defineUniPages({
         iconType: 'unocss',
       },
       {
-        pagePath: 'pages/about/about',
+        pagePath: 'pages/visible/index',
         text: '数据可视',
         icon: 'i-carbon-cloud-data-ops',
         iconType: 'unocss',

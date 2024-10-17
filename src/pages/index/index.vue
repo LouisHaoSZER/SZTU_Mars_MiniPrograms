@@ -3,12 +3,19 @@
 {
   layout: 'tabbar',
   style: {
-    // navigationStyle: 'custom',
     navigationBarTitleText: '首页',
+    enablePullDownRefresh: true,
   },
 }
 </route>
 <template>
+  <!-- Unocss存在的Bug，需要提前加载一次资源才能够正常使用 -->
+  <!-- i-carbon-wind-gusts -->
+  <!-- i-carbon-cloud -->
+  <!-- i-carbon-cloud-data-ops -->
+  <!-- i-carbon-rain -->
+  <!-- i-carbon-humidity -->
+  <!-- i-carbon-annotation-visibility -->
   <div class="min-h-screen bg-gradient font-sans text-gray-800 relative">
     <div class="curved-bg"></div>
     <div class="relative z-10 p-4">
@@ -43,7 +50,11 @@
           :key="index"
           class="bg-white bg-opacity-90 rounded-2xl p-4 flex flex-col items-center shadow-md"
         >
-          <div :class="['w-8 h-8 rounded-full mb-2', item.color]"></div>
+          <div
+            :class="['w-10 h-10 rounded-full mb-2 flex items-center justify-center', item.color]"
+          >
+            <div :class="['text-2xl text-white i-carbon-' + item.icon]"></div>
+          </div>
           <span class="text-xs mb-1">{{ item.label }}</span>
           <span class="font-semibold">{{ item.value }}</span>
         </div>
@@ -72,6 +83,7 @@
 </template>
 
 <script lang="ts" setup>
+import { httpGet } from '@/utils/http'
 import PLATFORM from '@/utils/platform'
 
 import { ref } from 'vue'
@@ -92,12 +104,12 @@ onLoad(() => {
 })
 
 const weatherDetails = ref([
-  { color: 'bg-blue-400', label: '风', value: '南风4级' },
-  { color: 'bg-gray-400', label: '云量', value: '98%' },
-  { color: 'bg-red-400', label: '气压', value: '994hPa' },
-  { color: 'bg-blue-300', label: '降水量', value: '0.8mm/h' },
-  { color: 'bg-green-400', label: '湿度', value: '85%' },
-  { color: 'bg-yellow-400', label: '能见度', value: '500m' },
+  { color: 'bg-blue-400', label: '风', icon: 'wind-gusts', value: '南风4级' },
+  { color: 'bg-gray-400', label: '云量', icon: 'cloud', value: '98%' },
+  { color: 'bg-red-400', label: '气压', icon: 'cloud-data-ops', value: '994hPa' },
+  { color: 'bg-blue-300', label: '降水量', icon: 'rain', value: '0.8mm/h' },
+  { color: 'bg-green-400', label: '湿度', icon: 'humidity', value: '85%' },
+  { color: 'bg-yellow-400', label: '能见度', icon: 'annotation-visibility', value: '500m' },
 ])
 
 const forecasts = ref([
@@ -108,6 +120,42 @@ const forecasts = ref([
   { day: '周四', color: 'bg-gray-400', temp: 32, wind: '4-5级' },
   { day: '周五', color: 'bg-yellow-400', temp: 33, wind: '4-5级' },
 ])
+
+// 请求数据部分
+// 获取气象数据
+const {
+  loading: weatherLoading,
+  error: weatherError,
+  data: weatherData,
+  run: getWeatherData,
+} = useRequest(() =>
+  httpGet('/weather/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
+)
+
+// 天气预警
+const {
+  loading: weatherWarningLoading,
+  error: weatherWarningError,
+  data: weatherWarningData,
+  run: getWeatherWarningData,
+} = useRequest(() =>
+  httpGet('/warning/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
+)
+
+// 未来天气预报
+const {
+  loading: futureWeatherLoading,
+  error: futureWeatherError,
+  data: futureWeatherData,
+  run: getFutureWeatherData,
+} = useRequest(() =>
+  httpGet('/weather/7d', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
+)
+
+onLoad(async () => {
+  await getWeatherData()
+  console.log(weatherData.value)
+})
 </script>
 
 <style>
