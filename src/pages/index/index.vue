@@ -20,27 +20,43 @@
     <div class="curved-bg"></div>
     <div class="relative z-10 p-4">
       <header class="flex justify-between items-center mb-6">
-        <div class="flex items-center space-x-2 bg-gray-800 rounded-3 p1 px-2">
-          <div class="rounded-full bg-white i-carbon-location"></div>
+        <div
+          class="flex items-center space-x-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-3 p1 px-2"
+        >
+          <div class="rounded-full bg-white bg-opacity-70 i-carbon-location"></div>
           <span class="font-semibold text-white">深圳·坪山 | 粤</span>
         </div>
-        <div class="flex items-center space-x-2">
-          <div class="rounded-full bg-white text-2xl i-carbon-sun"></div>
-          <span class="font-semibold text-white text-2xl">早上好～</span>
+        <div
+          class="flex items-center space-x-2 gap-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-3 p1 px-2"
+        >
+          <image
+            :src="`/static/icons/${todayWeather.icon}.svg`"
+            mode="aspectFit"
+            class="w-5 h-5 bg-orange-400 p1 bg-opacity-70 rounded-full"
+          />
+          <span class="font-semibold text-white text-1xl">{{ greeting }}</span>
         </div>
       </header>
 
       <div class="bg-white bg-opacity-50 backdrop-blur-md rounded-2xl p-6 mb-6 shadow-lg">
         <div class="flex justify-between items-center mb-4">
-          <span class="text-7xl font-bold text-white">{{ todayWeather.temp }}°</span>
-          <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
-            <div class="w-10 h-10 bg-white rounded-full"></div>
+          <div class="flex items-center">
+            <span class="text-7xl font-bold text-white mr-4">{{ weatherData.now.temp }}°C</span>
+          </div>
+          <div
+            class="w-20 h-20 bg-white bg-opacity-30 rounded-full flex items-center justify-center"
+          >
+            <image
+              :src="`/static/icons/${weatherData.now.icon}.svg`"
+              mode="aspectFit"
+              class="w-16 h-16"
+            />
           </div>
         </div>
-        <div class="text-xl mb-2 text-white">{{ todayWeather.text }}</div>
+        <div class="text-xl mb-2 text-white">{{ weatherData.now.text }}</div>
         <div class="flex justify-between text-sm text-white">
-          <span>{{ todayWeather.temp }} / {{ todayWeather.dew }}</span>
-          <span>体感温度 {{ todayWeather.feelsLike }}</span>
+          <span>{{ weatherData.now.temp }}°C / {{ weatherData.now.dew }}°C</span>
+          <span>体感温度 {{ weatherData.now.feelsLike }}°C</span>
         </div>
       </div>
 
@@ -60,17 +76,26 @@
         </div>
       </div>
 
-      <div class="bg-white bg-opacity-90 rounded-2xl p-4 mb-6 shadow-md">
-        <div class="flex justify-between">
+      <div class="bg-white bg-opacity-90 rounded-2xl p-4 mb-6 shadow-md overflow-x-auto">
+        <div class="flex space-x-4 min-w-max">
           <div
             v-for="(forecast, index) in forecasts"
             :key="index"
-            class="flex flex-col items-center"
+            class="flex flex-col items-center min-w-[60px]"
           >
-            <span class="text-sm mb-1">{{ forecast.day }}</span>
-            <div :class="['w-8 h-8 rounded-full mb-1', forecast.color]"></div>
-            <span class="font-semibold mb-1">{{ forecast.temp }}°</span>
-            <span class="text-xs">{{ forecast.wind }}</span>
+            <span class="text-sm mb-1">{{ forecast.fxDate.slice(5, 10) }}</span>
+            <!-- TODO:要根据时间判断白天还是晚上 -->
+            <image
+              :src="`/static/icons/${forecast.iconDay}.svg`"
+              mode="aspectFit"
+              class="w-8 h-8 mb-1"
+            />
+            <span class="font-semibold mb-1">
+              {{ forecast.tempMax }}°C / {{ forecast.tempMin }}°C
+            </span>
+            <span class="text-xs text-center">
+              {{ forecast.windDirDay }}{{ forecast.windScaleDay }}级
+            </span>
           </div>
         </div>
       </div>
@@ -95,10 +120,12 @@ defineOptions({
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 const author = ref('菲鸽')
-
+const time = ref(new Date().toLocaleTimeString())
+const greeting = ref('早上好，新的一天开始了～')
 // 测试 uni API 自动引入
 onLoad(() => {
   console.log(author)
+  greeting.value = getTimeGreeting(time.value)
 })
 
 // 接口数据映射表
@@ -111,6 +138,15 @@ const api2dataMap = new Map([
   ['能见度', 'vis'],
 ])
 
+const symbolMap = new Map([
+  ['风', '级'],
+  ['云量', '%'],
+  ['气压', '百帕'],
+  ['降水量', '毫米'],
+  ['湿度', '%'],
+  ['能见度', '公里'],
+])
+
 // 天气详情
 const weatherDetails = ref([
   { color: 'bg-blue-400', label: '风', icon: 'wind-gusts', value: '暂无数据～' }, // windDirection + windScale
@@ -121,14 +157,8 @@ const weatherDetails = ref([
   { color: 'bg-yellow-400', label: '能见度', icon: 'annotation-visibility', value: '暂无数据～' }, // vis
 ])
 
-const forecasts = ref([
-  { day: '今天', color: 'bg-yellow-400', temp: 28, wind: '4-5级' },
-  { day: '周一', color: 'bg-yellow-300', temp: 29, wind: '4-5级' },
-  { day: '周二', color: 'bg-yellow-300', temp: 30, wind: '4-5级' },
-  { day: '周三', color: 'bg-gray-400', temp: 31, wind: '4-5级' },
-  { day: '周四', color: 'bg-gray-400', temp: 32, wind: '4-5级' },
-  { day: '周五', color: 'bg-yellow-400', temp: 33, wind: '4-5级' },
-])
+// 未来天气预报
+const forecasts = ref<fData[]>([])
 
 // 今日天气
 const todayWeather = ref({
@@ -136,6 +166,7 @@ const todayWeather = ref({
   text: '暂无数据～',
   feelsLike: '暂无数据～',
   dew: '暂无数据～',
+  icon: '101',
 })
 
 // 请求数据部分
@@ -146,7 +177,7 @@ const {
   data: weatherData,
   run: getWeatherData,
 } = useWeatherRequest(
-  () => httpGet('/weather/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
+  () => httpGet('/weather/now', { location: '101280601', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
   { immediate: true },
 )
 
@@ -157,7 +188,7 @@ const {
   data: weatherWarningData,
   run: getWeatherWarningData,
 } = useWeatherRequest(() =>
-  httpGet('/warning/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
+  httpGet('/warning/now', { location: '101280601', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
 )
 
 // 未来天气预报
@@ -166,24 +197,38 @@ const {
   error: futureWeatherError,
   data: futureWeatherData,
   run: getFutureWeatherData,
-} = useWeatherRequest(() =>
-  httpGet('/weather/7d', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
+} = useWeatherRequest(
+  () => httpGet('/weather/7d', { location: '101280601', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
+  { immediate: true },
 )
 
 // 监听天气数据变化，更新天气详情
 watch(weatherData, () => {
+  // 今日天气数据
   const jsonWeatherData = JSON.parse(JSON.stringify(weatherData.value)) as WeatherData
   weatherDetails.value.forEach((item) => {
     const key = api2dataMap.get(item.label)
-    item.value = jsonWeatherData.now[key]
+    item.value = jsonWeatherData.now[key] + symbolMap.get(item.label)
   })
-  weatherDetails.value[0].value += jsonWeatherData.now.windScale + '级'
-
-  todayWeather.value.temp = jsonWeatherData.now.temp
-  todayWeather.value.text = jsonWeatherData.now.text
-  todayWeather.value.feelsLike = jsonWeatherData.now.feelsLike
-  todayWeather.value.dew = jsonWeatherData.now.dew
 })
+watch(futureWeatherData, () => {
+  const jsonFutureWeatherData = JSON.parse(
+    JSON.stringify(futureWeatherData.value),
+  ) as FutureWeatherData
+  forecasts.value = jsonFutureWeatherData.daily
+})
+
+// 判断时段
+const getTimeGreeting = (time: string) => {
+  const hour = parseInt(time.split(':')[0])
+  if (hour >= 6 && hour < 12) {
+    return '早上好，新的一天开始了～'
+  } else if (hour >= 12 && hour < 18) {
+    return '下午好，再坚持一下，就到下班时间了～'
+  } else {
+    return '晚上好，好好休息一下吧～'
+  }
+}
 </script>
 
 <style>
