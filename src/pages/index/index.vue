@@ -211,6 +211,8 @@ watch(weatherData, () => {
     item.value = jsonWeatherData.now[key] + symbolMap.get(item.label)
   })
 })
+
+// 监听未来天气预报数据变化，更新未来天气预报
 watch(futureWeatherData, () => {
   const jsonFutureWeatherData = JSON.parse(
     JSON.stringify(futureWeatherData.value),

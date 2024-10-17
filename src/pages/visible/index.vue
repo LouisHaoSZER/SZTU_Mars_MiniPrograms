@@ -18,8 +18,8 @@
         type="column"
         :echartsH5="true"
         :echartsApp="true"
-        :chartData="chartsDataLine1"
-        tooltipFormat="tooltipDemo1"
+        :chartData="precipLine"
+        tooltipFormat="precipDemo"
       />
     </view>
     <qiun-title-bar title="未来某段时间内的最高温和最低温" />
@@ -40,6 +40,7 @@
     <!-- <wd-button @click="getWeatherData">获取气象数据</wd-button>
     <wd-button @click="getWeatherWarningData">获取预警状态</wd-button>
     <wd-button @click="getFutureWeatherData">获取未来天气预报</wd-button> -->
+    <button @click="getLineData">line</button>
   </view>
 </template>
 
@@ -47,6 +48,7 @@
 import { ref, onMounted } from 'vue'
 import demodata from './demodata.json'
 import { httpGet } from '@/utils/http'
+import { WeatherData } from '@/constant/weather'
 
 // 请求数据部分
 // 获取气象数据
@@ -59,25 +61,15 @@ const {
   httpGet('/weather/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
 )
 
-// 天气预警
-const {
-  loading: weatherWarningLoading,
-  error: weatherWarningError,
-  data: weatherWarningData,
-  run: getWeatherWarningData,
-} = useRequest(() =>
-  httpGet('/warning/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
-)
+// // 未来天气预报
+// const {
+//   loading: futureWeatherLoading,
+//   error: futureWeatherError,
+//   data: futureWeatherData,
+//   run: getFutureWeatherData,
+// } = useRequest(() =>
 
-// 未来天气预报
-const {
-  loading: futureWeatherLoading,
-  error: futureWeatherError,
-  data: futureWeatherData,
-  run: getFutureWeatherData,
-} = useRequest(() =>
-  httpGet('/weather/7d', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
-)
+// )
 
 // 图表配置部分
 interface ChartData {
@@ -208,10 +200,40 @@ const getServerData2 = () => {
   }, 500)
 }
 
-onMounted(() => {
+// 修改 onMounted 钩子
+onMounted(async () => {
   getServerData1()
   getServerData2()
+  await updateFutureWeatherData()
 })
+
+// 初始化 precipLine
+const precipLine = ref<ChartData>({
+  categories: [],
+  series: [{ name: '降水量', data: [] }],
+})
+
+function getLineData() {
+  console.log(precipLine.value)
+}
+
+// 未来天气预报
+const forecasts = ref<fData[]>([])
+
+// 监听未来天气预报数据变化，更新未来天气预报
+async function updateFutureWeatherData() {
+  const futureWeatherData = (await httpGet('/weather/7d', {
+    location: '101010100',
+    key: '654c5a64fedd4c03be8403a5ddab4d35',
+  })) as unknown as FutureWeatherData
+
+  forecasts.value = futureWeatherData.daily
+
+  precipLine.value.categories = forecasts.value.map((item) => item.fxDate.substring(5, 10))
+  precipLine.value.series[0].data = forecasts.value.map((item) => Number(item.precip))
+
+  console.log(precipLine.value)
+}
 </script>
 
 <style>
