@@ -10,7 +10,7 @@
 
 <template>
   <view class="content">
-    <qiun-title-bar title="未来某段时间内的降水量" />
+    <qiun-title-bar title="未来7天时间内的降水量 (单位:mm)" />
     <view class="charts-box">
       <!-- 注意：因app端通过组件均不能传递function类型参数，组件内所有formatter方法，均需使用format属性指定config-echarts.js里事先定义好的formatter的key值，组件会自动匹配与其对应的function -->
       <!-- tooltip的format需要在组件的props参数上传递，例如tooltipFormat="tooltipDemo1"，并需要在config-echarts.js中的formatter节点中的tooltipDemo1中配置format方法。如果开启了echarts，则需要在config-echarts.js中的formatter节点中的tooltipDemo1中配置format方法。 -->
@@ -22,7 +22,7 @@
         tooltipFormat="precipDemo"
       />
     </view>
-    <qiun-title-bar title="未来某段时间内的最高温和最低温" />
+    <qiun-title-bar title="未来7天内的最高温和最低温  (温度单位:°C)" />
     <view class="charts-box">
       <!-- 需要把echarts文档内的formatter转成format，对应的'legendFormat'这个字符串为config-echarts.js中的formatter节点中的 legendFormat 方法-->
       <qiun-data-charts
@@ -30,7 +30,7 @@
         :echartsH5="true"
         :echartsApp="true"
         :eopts="{ legend: { format: 'legendFormat' } }"
-        :chartData="chartsDataColumn2"
+        :chartData="temperatureColumn"
       />
     </view>
     <view class="charts-box">
@@ -213,6 +213,15 @@ const precipLine = ref<ChartData>({
   series: [{ name: '降水量', data: [] }],
 })
 
+// 初始化 futureWeatherTemperatureColumn
+const temperatureColumn = ref<ChartData>({
+  categories: [],
+  series: [
+    { name: '最高温', data: [] },
+    { name: '最低温', data: [] },
+  ],
+})
+
 function getLineData() {
   console.log(precipLine.value)
 }
@@ -220,7 +229,7 @@ function getLineData() {
 // 未来天气预报
 const forecasts = ref<fData[]>([])
 
-// 监听未来天气预报数据变化，更新未来天气预报
+// 更新未来天气预报数据
 async function updateFutureWeatherData() {
   const futureWeatherData = (await httpGet('/weather/7d', {
     location: '101010100',
@@ -229,11 +238,22 @@ async function updateFutureWeatherData() {
 
   forecasts.value = futureWeatherData.daily
 
+  // 降水量柱状图部分
   precipLine.value.categories = forecasts.value.map((item) => item.fxDate.substring(5, 10))
   precipLine.value.series[0].data = forecasts.value.map((item) => Number(item.precip))
 
-  console.log(precipLine.value)
+  // 高低温曲线部分
+  temperatureColumn.value.categories = precipLine.value.categories
+  // 最高温
+
+  temperatureColumn.value.series[0].data = forecasts.value.map((item) => Number(item.tempMax))
+  temperatureColumn.value.series[0].name = '最高温'
+  // 最低温
+  temperatureColumn.value.series[1].data = forecasts.value.map((item) => Number(item.tempMin))
+  temperatureColumn.value.series[1].name = '最低温'
 }
+
+// 更新未来天气温度变化
 </script>
 
 <style>

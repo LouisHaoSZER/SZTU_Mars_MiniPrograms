@@ -76,6 +76,7 @@ const cfe = {
     legendFormat(name) {
       return `自定义图例+${name}`
     },
+
     yAxisFormatDemo(value, index) {
       return `${value}元`
     },

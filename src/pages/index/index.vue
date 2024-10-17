@@ -118,7 +118,6 @@ defineOptions({
 })
 
 // 获取屏幕边界到安全区域距离
-const { safeAreaInsets } = uni.getSystemInfoSync()
 const author = ref('菲鸽')
 const time = ref(new Date().toLocaleTimeString())
 const greeting = ref('早上好，新的一天开始了～')
@@ -208,7 +207,7 @@ watch(weatherData, () => {
   const jsonWeatherData = JSON.parse(JSON.stringify(weatherData.value)) as WeatherData
   weatherDetails.value.forEach((item) => {
     const key = api2dataMap.get(item.label)
-    item.value = jsonWeatherData.now[key] + symbolMap.get(item.label)
+    item.value = jsonWeatherData?.now[key] + symbolMap.get(item.label)
   })
 })
 

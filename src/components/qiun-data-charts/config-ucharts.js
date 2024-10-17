@@ -153,10 +153,15 @@ const cfu = {
         return `${series[index].name}：${series[index].data}元`
       }
     },
-    // TODO 增加tooltip
+    // TODO 增加降水量tooltip
     precipDemo(val, index, series, opts) {
-      return `降水量${val}mm`
+      return `降水量${series[index].data}mm`
     },
+    // TODO 增加温度tooltip
+    // temperatureDemo(val, index, series, opts) {
+
+    //   return `温度${series[index]}°C`
+    // },
   },
   // 这里演示了自定义您的图表类型的option，可以随意命名，之后在组件上 type="demotype" 后，组件会调用这个花括号里的option，如果组件上还存在opts参数，会将demotype与opts中option合并后渲染图表。
   demotype: {
