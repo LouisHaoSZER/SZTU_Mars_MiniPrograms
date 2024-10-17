@@ -119,12 +119,11 @@ defineOptions({
 
 // 获取屏幕边界到安全区域距离
 const author = ref('菲鸽')
-const time = ref(new Date().toLocaleTimeString())
 const greeting = ref('早上好，新的一天开始了～')
 // 测试 uni API 自动引入
 onLoad(() => {
   console.log(author)
-  greeting.value = getTimeGreeting(time.value)
+  greeting.value = getTimeGreeting()
 })
 
 // 接口数据映射表
@@ -220,9 +219,14 @@ watch(futureWeatherData, () => {
 })
 
 // 判断时段
-const getTimeGreeting = (time: string) => {
-  const hour = parseInt(time.split(':')[0])
-  if (hour >= 6 && hour < 12) {
+const getTimeGreeting = () => {
+  // 使用Date对象获取当前小时
+  const hour = new Date().getHours()
+  console.log('当前小时:', hour)
+
+  if (hour >= 0 && hour < 6) {
+    return '凌晨好,夜深了,注意休息哦～'
+  } else if (hour >= 6 && hour < 12) {
     return '早上好，新的一天开始了～'
   } else if (hour >= 12 && hour < 18) {
     return '下午好，再坚持一下，就到下班时间了～'

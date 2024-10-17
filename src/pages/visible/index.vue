@@ -34,21 +34,19 @@
       />
     </view>
     <view class="charts-box">
-      <qiun-title-bar title="未来某段时间内的风向图" />
-      <qiun-data-charts type="radar" :opts="opts" :chartData="chartData" />
+      <qiun-title-bar title="今日白天/夜间风向图" />
+      <qiun-data-charts type="radar" :opts="opts" :chartData="windDirection" />
     </view>
-    <!-- <wd-button @click="getWeatherData">获取气象数据</wd-button>
-    <wd-button @click="getWeatherWarningData">获取预警状态</wd-button>
-    <wd-button @click="getFutureWeatherData">获取未来天气预报</wd-button> -->
-    <button @click="getLineData">line</button>
+    <view class="charts-box">
+      <qiun-title-bar title="今日风速" />
+      <qiun-data-charts type="gauge" :opts="gaugeOpts" :chartData="windSpeed" />
+    </view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import demodata from './demodata.json'
 import { httpGet } from '@/utils/http'
-import { WeatherData } from '@/constant/weather'
 
 // 请求数据部分
 // 获取气象数据
@@ -61,28 +59,14 @@ const {
   httpGet('/weather/now', { location: '101010100', key: '654c5a64fedd4c03be8403a5ddab4d35' }),
 )
 
-// // 未来天气预报
-// const {
-//   loading: futureWeatherLoading,
-//   error: futureWeatherError,
-//   data: futureWeatherData,
-//   run: getFutureWeatherData,
-// } = useRequest(() =>
-
-// )
-
 // 图表配置部分
 interface ChartData {
-  categories: string[]
+  categories: any[]
   series: Array<{
     name: string
     data: number[]
   }>
 }
-
-const chartsDataLine1 = ref<ChartData>({} as ChartData)
-const chartsDataColumn2 = ref<ChartData>({} as ChartData)
-const chartData = ref<ChartData>({} as ChartData)
 
 const opts = ref({
   timing: 'easeOut',
@@ -174,36 +158,8 @@ const opts = ref({
   },
 })
 
-const getServerData1 = () => {
-  setTimeout(() => {
-    chartsDataLine1.value = JSON.parse(JSON.stringify(demodata.Line))
-    chartsDataColumn2.value = JSON.parse(JSON.stringify(demodata.Column))
-  }, 1500)
-}
-
-const getServerData2 = () => {
-  setTimeout(() => {
-    const res: ChartData = {
-      categories: ['维度1', '维度2', '维度3', '维度4', '维度5', '维度6'],
-      series: [
-        {
-          name: '成交量1',
-          data: [90, 110, 165, 195, 187, 172],
-        },
-        {
-          name: '成交量2',
-          data: [190, 210, 105, 35, 27, 102],
-        },
-      ],
-    }
-    chartData.value = JSON.parse(JSON.stringify(res))
-  }, 500)
-}
-
 // 修改 onMounted 钩子
 onMounted(async () => {
-  getServerData1()
-  getServerData2()
   await updateFutureWeatherData()
 })
 
@@ -222,9 +178,23 @@ const temperatureColumn = ref<ChartData>({
   ],
 })
 
-function getLineData() {
-  console.log(precipLine.value)
-}
+const windDirection = ref<ChartData>({
+  categories: ['北', '东北', '东', '东南', '南', '西南', '西', '西北'],
+  series: [
+    { name: '日间风向', data: [] },
+    { name: '夜间风向', data: [] },
+  ],
+})
+
+// 风速仪表盘
+const windSpeed = ref<ChartData>({
+  categories: [
+    { value: 0.2, color: '#1890ff' },
+    { value: 0.8, color: '#2fc25b' },
+    { value: 1, color: '#f04864' },
+  ],
+  series: [{ name: '最大风速', data: [] }],
+})
 
 // 未来天气预报
 const forecasts = ref<fData[]>([])
@@ -251,9 +221,76 @@ async function updateFutureWeatherData() {
   // 最低温
   temperatureColumn.value.series[1].data = forecasts.value.map((item) => Number(item.tempMin))
   temperatureColumn.value.series[1].name = '最低温'
+
+  // 风向雷达图部分
+  windDirection.value.series[0].data = [Number(forecasts.value[0].wind360Day)]
+  windDirection.value.series[0].name = '日间风向'
+  windDirection.value.series[1].data = [Number(forecasts.value[0].wind360Night)]
+  windDirection.value.series[1].name = '夜间风向'
+
+  // 风速仪表盘部分
+  windSpeed.value.series[0].data = [Number(forecasts.value[0].windSpeedDay) * 0.01]
+  console.log(windSpeed.value)
 }
 
-// 更新未来天气温度变化
+const gaugeOpts = ref({})
+
+// 风速仪表盘配置
+watch(
+  () => forecasts.value[0].windSpeedDay,
+  (newVal) => {
+    gaugeOpts.value = {
+      color: [
+        '#1890FF',
+        '#91CB74',
+        '#FAC858',
+        '#EE6666',
+        '#73C0DE',
+        '#3CA272',
+        '#FC8452',
+        '#9A60B4',
+        '#ea7ccc',
+      ],
+      padding: undefined,
+      title: {
+        name: `${newVal}Km/H`,
+        fontSize: 25,
+        color: '#2fc25b',
+        offsetY: 50,
+      },
+      subtitle: {
+        name: '实时速度',
+        fontSize: 15,
+        color: '#666666',
+        offsetY: -50,
+      },
+      extra: {
+        gauge: {
+          type: 'default',
+          width: 30,
+          labelColor: '#666666',
+          startAngle: 0.75,
+          endAngle: 0.25,
+          startNumber: 0,
+          endNumber: 100,
+          labelFormat: '',
+          splitLine: {
+            fixRadius: 0,
+            splitNumber: 10,
+            width: 30,
+            color: '#FFFFFF',
+            childNumber: 5,
+            childWidth: 12,
+          },
+          pointer: {
+            width: 24,
+            color: 'auto',
+          },
+        },
+      },
+    }
+  },
+)
 </script>
 
 <style>
