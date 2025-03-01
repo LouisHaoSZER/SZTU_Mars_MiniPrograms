@@ -24,7 +24,7 @@
           class="flex items-center space-x-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-3 p1 px-2"
         >
           <div class="rounded-full bg-white bg-opacity-70 i-carbon-location"></div>
-          <span class="font-semibold text-white">深圳·坪山 | 粤</span>
+          <span class="font-semibold text-white">深圳·坪山</span>
         </div>
         <div
           class="flex items-center space-x-2 gap-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-3 p1 px-2"

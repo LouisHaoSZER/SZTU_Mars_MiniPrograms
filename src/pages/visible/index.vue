@@ -202,7 +202,7 @@ const forecasts = ref<fData[]>([])
 // 更新未来天气预报数据
 async function updateFutureWeatherData() {
   const futureWeatherData = (await httpGet('/weather/7d', {
-    location: '101010100',
+    location: '101280601',
     key: '654c5a64fedd4c03be8403a5ddab4d35',
   })) as unknown as FutureWeatherData
 
