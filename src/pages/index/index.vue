@@ -24,7 +24,7 @@
           class="flex items-center space-x-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-3 p1 px-2"
         >
           <div class="rounded-full bg-white bg-opacity-70 i-carbon-location"></div>
-          <span class="font-semibold text-white">深圳·坪山</span>
+          <span class="font-semibold text-white">深圳技术大学</span>
         </div>
         <div
           class="flex items-center space-x-2 gap-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-3 p1 px-2"
@@ -34,7 +34,9 @@
             mode="aspectFit"
             class="w-5 h-5 bg-orange-400 p1 bg-opacity-70 rounded-full"
           />
-          <span class="font-semibold text-white text-1xl">{{ greeting }}</span>
+          <span class="font-semibold text-white text-1xl">
+            {{ greeting }}
+          </span>
         </div>
       </header>
 
@@ -60,22 +62,6 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4 mb-6">
-        <div
-          v-for="(item, index) in weatherDetails"
-          :key="index"
-          class="bg-white bg-opacity-90 rounded-2xl p-4 flex flex-col items-center shadow-md"
-        >
-          <div
-            :class="['w-10 h-10 rounded-full mb-2 flex items-center justify-center', item.color]"
-          >
-            <div :class="['text-2xl text-white i-carbon-' + item.icon]"></div>
-          </div>
-          <span class="text-xs mb-1">{{ item.label }}</span>
-          <span class="font-semibold">{{ item.value }}</span>
-        </div>
-      </div>
-
       <div class="bg-white bg-opacity-90 rounded-2xl p-4 mb-6 shadow-md overflow-x-auto">
         <div class="flex space-x-4 min-w-max">
           <div
@@ -97,6 +83,22 @@
               {{ forecast.windDirDay }}{{ forecast.windScaleDay }}级
             </span>
           </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div
+          v-for="(item, index) in weatherDetails"
+          :key="index"
+          class="bg-white bg-opacity-90 rounded-2xl p-4 flex flex-col items-center shadow-md"
+        >
+          <div
+            :class="['w-10 h-10 rounded-full mb-2 flex items-center justify-center', item.color]"
+          >
+            <div :class="['text-2xl text-white i-carbon-' + item.icon]"></div>
+          </div>
+          <span class="text-xs mb-1">{{ item.label }}</span>
+          <span class="font-semibold">{{ item.value }}</span>
         </div>
       </div>
 
@@ -218,6 +220,12 @@ watch(futureWeatherData, () => {
   forecasts.value = jsonFutureWeatherData.daily
 })
 
+// 获取当前时间
+const getCurrentTime = () => {
+  const date = new Date()
+  return date.getFullYear() + '年' + date.getMonth() + 1 + '月' + date.getDate() + '日'
+}
+
 // 判断时段
 const getTimeGreeting = () => {
   // 使用Date对象获取当前小时
@@ -225,13 +233,13 @@ const getTimeGreeting = () => {
   console.log('当前小时:', hour)
 
   if (hour >= 0 && hour < 6) {
-    return '凌晨好,夜深了,注意休息哦～'
+    return '今天是' + getCurrentTime() + '，夜猫子，注意休息哦～'
   } else if (hour >= 6 && hour < 12) {
-    return '早上好，新的一天开始了～'
+    return '今天是' + getCurrentTime() + '，阳光明媚的一天开始啦～'
   } else if (hour >= 12 && hour < 18) {
-    return '下午好，再坚持一下，就到下班时间了～'
+    return '现在是' + getCurrentTime() + '，继续加油，快乐时光不远啦～'
   } else {
-    return '晚上好，好好休息一下吧～'
+    return '现在是' + getCurrentTime() + '，放松一下，享受美好夜晚～'
   }
 }
 </script>

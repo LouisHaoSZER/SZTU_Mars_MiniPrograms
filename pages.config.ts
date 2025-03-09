@@ -41,18 +41,18 @@ export default defineUniPages({
         icon: 'i-carbon-cloud-data-ops',
         iconType: 'unocss',
       },
-      // {
-      //   pagePath: 'pages/announcement/index',
-      //   text: '公告',
-      //   icon: 'i-carbon-show-data-cards',
-      //   iconType: 'unocss',
-      // },
-      // {
-      //   pagePath: 'pages/metesciab/index',
-      //   text: '气象科普',
-      //   icon: 'i-carbon-help',
-      //   iconType: 'unocss',
-      // },
+      {
+        pagePath: 'pages/announcement/index',
+        text: '公告',
+        icon: 'i-carbon-show-data-cards',
+        iconType: 'unocss',
+      },
+      {
+        pagePath: 'pages/metesciab/index',
+        text: '气象科普',
+        icon: 'i-carbon-help',
+        iconType: 'unocss',
+      },
     ],
   },
 })

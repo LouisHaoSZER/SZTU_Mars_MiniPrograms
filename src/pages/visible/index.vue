@@ -10,7 +10,7 @@
 
 <template>
   <view class="content">
-    <qiun-title-bar title="未来7天时间内的降水量 (单位:mm)" />
+    <qiun-title-bar title="未来7天的降水量预测 (单位:mm)" />
     <view class="charts-box">
       <!-- 注意：因app端通过组件均不能传递function类型参数，组件内所有formatter方法，均需使用format属性指定config-echarts.js里事先定义好的formatter的key值，组件会自动匹配与其对应的function -->
       <!-- tooltip的format需要在组件的props参数上传递，例如tooltipFormat="tooltipDemo1"，并需要在config-echarts.js中的formatter节点中的tooltipDemo1中配置format方法。如果开启了echarts，则需要在config-echarts.js中的formatter节点中的tooltipDemo1中配置format方法。 -->
@@ -22,7 +22,7 @@
         tooltipFormat="precipDemo"
       />
     </view>
-    <qiun-title-bar title="未来7天内的最高温和最低温  (温度单位:°C)" />
+    <qiun-title-bar title="未来7天的最高温与最低温  (温度单位:°C)" />
     <view class="charts-box">
       <!-- 需要把echarts文档内的formatter转成format，对应的'legendFormat'这个字符串为config-echarts.js中的formatter节点中的 legendFormat 方法-->
       <qiun-data-charts
